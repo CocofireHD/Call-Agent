@@ -143,8 +143,9 @@ Das Vercel-Projekt hostet **nur die `api/`-Functions** (kein Build, kein Fronten
 **Weg 1: Dashboard (empfohlen)**
 
 1. https://vercel.com/new → `CocofireHD/Call-Agent` importieren.
-2. Framework Preset: **Other**. Root Directory: `./`. Build Command: **leer lassen**
+2. Framework Preset: **Other**. Root Directory: `./`. Build Command: **nichts eintippen — Feld leer lassen**
    (es gibt nichts zu bauen — nur Functions).
+   Falls ein No-Op verlangt wird: `echo ok`.
 3. Environment Variables (Production): `KILO_API_KEY`, `DEEPGRAM_API_KEY`.
 4. Deploy → URL kopieren, z. B. `https://call-agent-xyz.vercel.app`.
 5. Test: `https://<url>/api/health` → `{ "ok": true, "kiloConfigured": true, "deepgramConfigured": true }`.
