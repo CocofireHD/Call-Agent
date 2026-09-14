@@ -1,0 +1,30 @@
+# dependencies
+node_modules/
+
+# builds
+dist/
+build/
+.vercel/
+out/
+
+# env — never commit secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# logs / os
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# temp audio / junk
+*.wav
+*.mp3
+*.webm
+*.raw
+tmp/
+temp/
