@@ -132,23 +132,36 @@ gh auth login
 
 ## Backend Deployment (Vercel, empfohlen)
 
-GitHub Pages kann keine Secrets halten — das Backend läuft separat (Serverless). Vercel CLI war bei der Erstellung **nicht authentifiziert**, daher liegt hier die exakte Anleitung:
+GitHub Pages kann keine Secrets halten — das Backend läuft separat als Serverless-Functions (`api/`).
+Das Vercel-Projekt hostet **nur die `api/`-Functions** (kein Build, kein Frontend — das liegt auf Pages).
+
+> **Wichtig:** Vercel erkennt im Repo zwei „Services" (`frontend` + `backend`/Express).
+> Den Multi-Service-Setup **nicht** wählen („Set up project with all detected services") —
+> der Express-Dev-Server läuft nicht auf Vercel. Unser Vercel-Backend sind ausschließlich
+> die `api/*.ts`-Functions (teilen sich Code mit `backend/src/`).
+
+**Weg 1: Dashboard (empfohlen)**
+
+1. https://vercel.com/new → `CocofireHD/Call-Agent` importieren.
+2. Framework Preset: **Other**. Root Directory: `./`. Build Command: **leer lassen**
+   (es gibt nichts zu bauen — nur Functions).
+3. Environment Variables (Production): `KILO_API_KEY`, `DEEPGRAM_API_KEY`.
+4. Deploy → URL kopieren, z. B. `https://call-agent-xyz.vercel.app`.
+5. Test: `https://<url>/api/health` → `{ "ok": true, "kiloConfigured": true, "deepgramConfigured": true }`.
+
+**Weg 2: CLI (nur wenn das Dashboard-Projekt schon existiert)**
 
 ```powershell
-npm i -g vercel
-vercel login
-vercel --cwd . --prod
-# Env setzen (oder im Dashboard: Project → Settings → Environment Variables):
+Remove-Item -Recurse -Force .vercel -ErrorAction SilentlyContinue
+vercel link   # existierendes Projekt wählen, KEIN neues Multi-Service-Setup
 vercel env add KILO_API_KEY production
 vercel env add DEEPGRAM_API_KEY production
-vercel --cwd . --prod
+vercel --prod
 ```
 
-- Funktionen: `api/health.ts`, `api/classify.ts`, `api/deepgram-token.ts`, `api/agent/respond.ts` (importieren Shared-Code aus `backend/src/`).
 - Danach: Backend-URL kopieren (z. B. `https://call-agent-backend.vercel.app`), als `VITE_BACKEND_URL` …
   - … lokal in `frontend/.env`, und
   - … im GitHub-Repo als Actions-Secret `VITE_BACKEND_URL` → neuer Push baut das Frontend mit der URL.
-- Alternativ: Vercel-Dashboard → Import `CocofireHD/Call-Agent` → Root `./`, Build `npm run build --workspace=frontend`, Output `frontend/dist`, Env `KILO_API_KEY`, `DEEPGRAM_API_KEY`.
 - CORS erlaubt bereits `https://cocofirehd.github.io` + alle `localhost`-Ports; weitere Origins via Backend-Env `ALLOWED_ORIGINS=https://...` (kommagetrennt).
 
 ## API-Referenz (kurz)
