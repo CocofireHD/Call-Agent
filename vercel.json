@@ -1,1 +1,10 @@
-{"$schema": "https://openapi.vercel.sh/vercel.json", "builds": [{"src": "api/health.ts", "use": "@vercel/node"}, {"src": "api/classify.ts", "use": "@vercel/node"}, {"src": "api/deepgram-token.ts", "use": "@vercel/node"}, {"src": "api/agent/respond.ts", "use": "@vercel/node"}]}
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/health.ts": { "maxDuration": 10 },
+    "api/classify.ts": { "maxDuration": 30 },
+    "api/deepgram-token.ts": { "maxDuration": 10 },
+    "api/agent/respond.ts": { "maxDuration": 30 }
+  }
+}
+
